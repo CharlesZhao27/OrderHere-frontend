@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useFormik } from 'formik';
 import { useDispatch } from 'react-redux';
@@ -16,10 +16,13 @@ import Yup from '../../utils/yupValidation';
 import hotToast from '../../utils/hotToast';
 import { register, uniqueUsername, uniqueEmail } from '../../services/Public';
 import loginAction from '../../store/actions/httpAction';
+import {GoogleOAuthProvider} from '@react-oauth/google';
+import {GoogleLogin} from '@react-oauth/google';
 
 const Register = ({ login }) => {
   const [isLoading, setLoading] = useState(false);
   const dispatch = useDispatch();
+
   const formik = useFormik({
     initialValues: {
       username: '',
@@ -78,6 +81,7 @@ const Register = ({ login }) => {
     <Box
       component="main"
       sx={{
+        bgcolor: '#FEF6E9',
         display: 'flex',
         flexDirection: 'column',
         minHeight: '100%',
@@ -89,10 +93,10 @@ const Register = ({ login }) => {
       <Container maxWidth="md">
         <form onSubmit={formik.handleSubmit}>
           <Typography align="center">
-            <Image src="/logo.png" height="55" width="55" alt="logo" />
+            <img src="/logo.svg" height="85" width="348" alt="logo" />
           </Typography>
           <Typography color="textPrimary" variant="h4" align="center">
-            Register
+            CREATE ACCOUNT
           </Typography>
           <Typography
             color="textSecondary"
@@ -100,14 +104,53 @@ const Register = ({ login }) => {
             variant="body2"
             align="center"
           >
-            Where the Discovering Starts
+            Please Enter your Email Address to Start your Online Application
           </Typography>
           <Box sx={{ my: 3 }}>
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <TextField
+                  error={Boolean(
+                    formik.touched.firstname && formik.errors.firstname,
+                  )}
+                  fullWidth
+                  helperText={
+                    formik.touched.firstname && formik.errors.firstname
+                  }
+                  label="First Name"
+                  margin="normal"
+                  name="firstname"
+                  onBlur={formik.handleBlur}
+                  onChange={formik.handleChange}
+                  type="firstname"
+                  value={formik.values.firstname}
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  error={Boolean(
+                    formik.touched.lastname && formik.errors.lastname,
+                  )}
+                  fullWidth
+                  helperText={formik.touched.lastname && formik.errors.lastname}
+                  label="Last name"
+                  margin="normal"
+                  name="lastname"
+                  onBlur={formik.handleBlur}
+                  onChange={formik.handleChange}
+                  type="lastname"
+                  value={formik.values.lastname}
+                  variant="outlined"
+                />
+              </Grid>
+            </Grid>
+
             <TextField
               error={Boolean(formik.touched.email && formik.errors.email)}
               fullWidth
               helperText={formik.touched.email && formik.errors.email}
-              label="Email Address"
+              label="Enter your Email..."
               margin="normal"
               name="email"
               onBlur={formik.handleBlur}
@@ -116,24 +159,12 @@ const Register = ({ login }) => {
               value={formik.values.email}
               variant="outlined"
             />
-            <TextField
-              error={Boolean(formik.touched.username && formik.errors.username)}
-              fullWidth
-              helperText={formik.touched.username && formik.errors.username}
-              label="Username"
-              margin="normal"
-              name="username"
-              onBlur={formik.handleBlur}
-              onChange={formik.handleChange}
-              type="username"
-              value={formik.values.username}
-              variant="outlined"
-            />
+
             <TextField
               error={Boolean(formik.touched.password && formik.errors.password)}
               fullWidth
               helperText={formik.touched.password && formik.errors.password}
-              label="Password"
+              label="Enter your password..."
               margin="normal"
               name="password"
               onBlur={formik.handleBlur}
@@ -142,11 +173,12 @@ const Register = ({ login }) => {
               value={formik.values.password}
               variant="outlined"
             />
-            <Grid sx={{ pt: 3 }}>
+
+            <Grid sx={{ pt: 3, }}>
               <LoadingButton
                 loading={isLoading}
                 disabled={formik.isSubmitting}
-                color="primary"
+                color="error"
                 fullWidth
                 size="large"
                 variant="contained"
@@ -186,14 +218,36 @@ const Register = ({ login }) => {
                   }
                 }}
               >
-                Register
+                SIGN UP
               </LoadingButton>
             </Grid>
-            <Divider />
+            
+            <Box sx={{mt:2, mb:1}}>
+              <Divider> OR </Divider>
+            </Box>
+
             <Box sx={{ pt: 1 }}>
-              <Typography color="textSecondary" variant="body2">
-                <Button onClick={() => login()}>Having an account</Button>
-              </Typography>
+              <Grid
+                container
+                spacing={1}
+                alignItems="center"
+                justifyContent="center"
+              >
+                <Grid item>
+                  <Typography>
+                    <text>Already have an account?</text>
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Typography
+                    color="textSecondary"
+                    variant="body2"
+                    sx={{ ml: -2.5 }}
+                  >
+                    <Button onClick={() => login()}> Log in</Button>
+                  </Typography>
+                </Grid>
+              </Grid>
             </Box>
           </Box>
         </form>

@@ -6,6 +6,7 @@ const Index = () => {
     <ThreeColumnsLayout>
       Hello World
     </ThreeColumnsLayout>
+    
   );
 };
 
